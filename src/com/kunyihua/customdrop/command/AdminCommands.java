@@ -1,83 +1,58 @@
 package com.kunyihua.customdrop.command;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.kunyihua.customdrop.GlobalVar;
+import com.kunyihua.customdrop.craftclass.CustomItem;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.kunyihua.customdrop.craftclass.CustomItem;
-import com.kunyihua.customdrop.GlobalVar;
+import java.util.ArrayList;
+import java.util.List;
 
-public class AdminCommands implements CommandExecutor
-{    
-    public AdminCommands()
-    {
-    	
-	}
- 
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
-	{
-		// §PÂ_¬O§_¬°ª±®aªº«ü¥O
-		if (sender instanceof Player)
-		{
-			// §PÂ_«ü¥Oªø«×
-			if (args.length == 0)
-			{
-				// Åã¥Ü»¡©ú
-				sender.sendMessage("¡±9==========¡±dCustomDrop¡±9==========");
-				sender.sendMessage("¡±a/cdrop reload ¡±f- ¡±e­«Åª³]©wÀÉ");
-				sender.sendMessage("¡±a/cdrop list ¡±f- ¡±e¦C¥X©Ò¦³¥Íª«ªº±¼¸¨¸ê°T");
-				return true;
-			}
-			else
-			{
-				if (args[0].equals("reload"))
-				{
-					// ²M°£¦X¦¨ªí
-					GlobalVar.server.resetRecipes();
-					// ²M°£¹ï·Óªí
-					GlobalVar.CustomItemMap.clear();
-					// ­«Åª
-					GlobalVar.loadConfig.ReloadConfig();
-					sender.sendMessage(ChatColor.YELLOW +"³]©wÀÉÅª¨ú§¹¦¨");
-					return true;
-				}
-				else if (args[0].equals("list"))
-				{
-					// °j°éÅã¥Ü
-					List<CustomItem> lstCustomItem = new ArrayList<CustomItem>();
-					sender.sendMessage("¡±9==================================");
-					for (String key : GlobalVar.CustomItemMap.keySet())
-					{
-						sender.sendMessage("¡±a¡u" + GlobalVar.GetEntityName(key) + "¡v");
-						lstCustomItem = GlobalVar.CustomItemMap.get(key);
-						for (CustomItem customItem : lstCustomItem)
-						{
-							if (customItem.OnlyWorld.equals(""))
-							{
-								sender.sendMessage("¡±a" + customItem.ItemName + "¡±a(¡±f" + customItem.Chance + "%¡±a±¼¸¨¡±f" + customItem.Quantity + "¡±a­Ó)");
-							}
-							else
-							{
-								sender.sendMessage("¡±a" + customItem.ItemName + "¡±a(¡±f" + customItem.Chance + "%¡±a±¼¸¨¡±f" + customItem.Quantity + "¡±a­Ó) - ­­©w¦b¡±f" + customItem.OnlyWorld);
-							}
-						}
-			        }
-					sender.sendMessage("¡±9==================================");
-					return true;
-				}
-			}
-	    }
-		else
-		{
-	    	sender.sendMessage("¦¹«ü¥O¤£¤ä´©±±¨î¥x¼Ò¦¡!");
-	    	return false;
-	    }
-		return false;
-	}
+public class AdminCommands implements CommandExecutor {
+    public AdminCommands() {
+
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (sender instanceof Player) {
+            if (args.length == 0) {
+                sender.sendMessage("Â§9==========Â§dCustomDropÂ§9==========");
+                sender.sendMessage("Â§a/cdrop reload Â§f- Â§eé‡è®€è¨­å®šæª”");
+                sender.sendMessage("Â§a/cdrop list Â§f- Â§eåˆ—å‡ºæ‰€æœ‰ç”Ÿç‰©çš„æ‰è½è³‡è¨Š");
+                return true;
+            } else {
+                if (args[0].equals("reload")) {
+                    GlobalVar.server.resetRecipes();
+                    GlobalVar.CustomItemMap.clear();
+                    GlobalVar.loadConfig.ReloadConfig();
+                    sender.sendMessage(ChatColor.YELLOW + "è¨­å®šæª”è®€å–å®Œæˆ");
+                    return true;
+                } else if (args[0].equals("list")) {
+                    List<CustomItem> lstCustomItem = new ArrayList<CustomItem>();
+                    sender.sendMessage("Â§9==================================");
+                    for (String key : GlobalVar.CustomItemMap.keySet()) {
+                        sender.sendMessage("Â§aã€Œ" + GlobalVar.GetEntityName(key) + "ã€");
+                        lstCustomItem = GlobalVar.CustomItemMap.get(key);
+                        for (CustomItem customItem : lstCustomItem) {
+                            if (customItem.onlyWorld.equals("")) {
+                                sender.sendMessage("Â§a" + customItem.itemName + "Â§a(Â§f" + customItem.chance + "%Â§aæ‰è½Â§f" + customItem.quantity + "Â§aå€‹)");
+                            } else {
+                                sender.sendMessage("Â§a" + customItem.itemName + "Â§a(Â§f" + customItem.chance + "%Â§aæ‰è½Â§f" + customItem.quantity + "Â§aå€‹) - é™å®šåœ¨Â§f" + customItem.onlyWorld);
+                            }
+                        }
+                    }
+                    sender.sendMessage("Â§9==================================");
+                    return true;
+                }
+            }
+        } else {
+            sender.sendMessage("æ­¤æŒ‡ä»¤ä¸æ”¯æ´æ§åˆ¶å°æ¨¡å¼!");
+            return false;
+        }
+        return false;
+    }
 }

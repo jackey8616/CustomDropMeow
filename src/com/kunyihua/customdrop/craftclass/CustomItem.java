@@ -1,113 +1,127 @@
 package com.kunyihua.customdrop.craftclass;
 
-import java.util.List;
-
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CustomItem
 {
-	//ª««~¦WºÙ
-	public String ItemName;
-	//ª««~¦WºÙ
-	public int UseOriginalName;
-	// ª««~»¡©ú
-	public List<String> ItemLores;
-	// ª««~ID(­ì©lID)
-	public int ItemID;
-	// ÃC¦â
-	public byte Red;
-	public byte Green;
-	public byte Blue;
-	// ª««~ªşÄİID(­ì©lID)
-	public byte ItemSubID;
-	// ª««~ªşÅ]
-	public List<String> Enchants;
-	// ±o¨ìªºª««~¼Æ¶q
-	public int Quantity;
-	// ±¼¸¨²v
-	public double Chance;
-	// ­­©w¦a¹Ï
-	public String OnlyWorld;
-	
-	public CustomItem(String newItemName,
-					   int newUseOriginalName,
-					   List<String> newItemLores,
-					   int newItemID,
-					   byte newRed,
-					   byte newGreen,
-					   byte newBlue,
-					   byte newItemSubID,
-					   List<String> newEnchants,
-					   int newQuantity,
-					   double newChance,
-					   String newOnlyWorld)
-	{	    
-		// ³]©w¸ê®Æ
-		this.ItemName = newItemName;
-		this.UseOriginalName = newUseOriginalName;
-		this.ItemLores = newItemLores;
-		this.ItemID = newItemID;
-		this.Red = newRed;
-		this.Green = newGreen;
-		this.Blue = newBlue;
-		this.ItemSubID = newItemSubID;
-		this.Enchants = newEnchants;
-		this.Quantity = newQuantity;
-		this.Chance = newChance;
-		this.OnlyWorld = newOnlyWorld;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public ItemStack getResultItem()
-	{
-	    // ²£¥Íª««~¥Î
-		ItemStack ResultItem;
-	    ItemMeta newItemMeta;
-	    LeatherArmorMeta LeatherArmorMeta;
-		
-		// ¦X¦¨«á±o¨ìªºª««~³]©w
-		if (this.ItemSubID != 0)
-		{ ResultItem = new ItemStack(Material.getMaterial(this.ItemID), 1, this.ItemSubID); }
-		else
-		{ ResultItem = new ItemStack(Material.getMaterial(this.ItemID)); }
-		// §PÂ_¬O§_­n³]©wÃC¦â
-		if (this.ItemID == 298 || this.ItemID == 299|| this.ItemID == 300 || this.ItemID == 301)
-		{
-			LeatherArmorMeta = (LeatherArmorMeta)ResultItem.getItemMeta();
-			LeatherArmorMeta.setColor(Color.fromRGB(this.Red, this.Green, this.Blue));
-			ResultItem.setItemMeta(LeatherArmorMeta);
-		}
-		newItemMeta = ResultItem.getItemMeta();
-		// ªşÅ]
-		for (int i = 0; i < this.Enchants.size(); i++)
-		{
-			String[] EnchantsParts = this.Enchants.get(i).split(":");
-			int level = Integer.parseInt(EnchantsParts[1]);
-			Enchantment enchantment = Enchantment.getByName(EnchantsParts[0]);
-			newItemMeta.addEnchant(enchantment, level, true);
-		}
-		// ¦WºÙ
-		if (this.UseOriginalName == 0)
-		{
-			newItemMeta.setDisplayName(this.ItemName);
-		}
-		// »¡©ú
-		if (this.ItemLores.size() > 0)
-		{
-			newItemMeta.setLore(this.ItemLores);
-		}
-		// ¼g¤J¸ê®Æ
-		ResultItem.setItemMeta(newItemMeta);
-    	// ³]©w¼Æ¶q
-		ResultItem.setAmount(this.Quantity);
-	    // ³]©w­@¤[¬°³Ì°ª
-		ResultItem.setDurability((short)0);
-		// ¦^¶Ç
-		return ResultItem;
-	}
+    //ç‰©å“åç¨±
+    public String itemName;
+    //ç‰©å“åç¨±
+    public int useOriginalName;
+    // ç‰©å“èªªæ˜
+    public List<String> itemLores;
+    // ç‰©å“ID(åŸå§‹ID)
+    public int itemID;
+    // é¡è‰²
+    public byte red;
+    public byte green;
+    public byte blue;
+    // ç‰©å“é™„å±¬ID(åŸå§‹ID)
+    public byte itemSubID;
+    // ç‰©å“é™„é­”
+    public List<String> enchants;
+    // å¾—åˆ°çš„ç‰©å“æ•¸é‡
+    public int quantity;
+    // æ‰è½ç‡
+    public double chance;
+    // é™å®šåœ°åœ–
+    public String onlyWorld;
+
+    public CustomItem (String itemName, MemorySection config) {
+        this.itemName = itemName;
+        this.useOriginalName = config.contains(itemName + ".UseCustomName") ? config.getInt(itemName + ".UseCustomName") : 0;
+        this.itemLores = this.getItemLores((MemorySection) config.get(itemName));
+        this.getItemID((MemorySection) config.get(itemName));
+        this.enchants = config.contains(itemName + ".Enchants") ? config.getStringList(itemName + ".Enchants") : new ArrayList<>();
+        this.quantity = config.contains(itemName + ".Quantity") ? config.getInt(itemName + ".Quantity") : 1;
+        this.chance = config.contains(itemName + ".Chance") ? config.getDouble(itemName + ".Chance") : 1000;
+        this.onlyWorld = config.contains(itemName + ".OnlyWorld") ? config.getString(itemName + ".OnlyWorld") : "";
+    }
+
+    private List<String> getItemLores (MemorySection config) {
+        List<String> itemLores = new ArrayList<>();
+        if (config.contains("ItemLores")) {
+            for (String string : config.getStringList("ItemLores")) {
+                itemLores.add(string.replace("_", " "));
+            }
+        }
+        return itemLores;
+    }
+
+    private void getItemID (MemorySection config) {
+        if (config.contains("ItemID")) {
+            String strItemID = config.getString("ItemID");
+            if (strItemID.contains(":")) {
+                this.itemID = Integer.parseInt(strItemID.split(":")[0]);
+                if (this.itemID >= 298 && this.itemID <= 301) {
+                    this.red = Byte.parseByte(strItemID.split(":")[1].split(",")[0]);
+                    this.green = Byte.parseByte(strItemID.split(":")[1].split(",")[1]);
+                    this.blue = Byte.parseByte(strItemID.split(":")[1].split(",")[2]);
+                } else {
+                    this.itemSubID = Byte.parseByte(strItemID.split(":")[1]);
+                }
+            } else {
+                this.itemID = Integer.parseInt(strItemID);
+                this.itemSubID = 0;
+            }
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    public ItemStack getResultItem()
+    {
+        // ç”¢ç”Ÿç‰©å“ç”¨
+        ItemStack ResultItem;
+        ItemMeta newItemMeta;
+        LeatherArmorMeta LeatherArmorMeta;
+
+        // åˆæˆå¾Œå¾—åˆ°çš„ç‰©å“è¨­å®š
+        if (this.itemSubID != 0)
+        { ResultItem = new ItemStack(Material.getMaterial(this.itemID), 1, this.itemSubID); }
+        else
+        { ResultItem = new ItemStack(Material.getMaterial(this.itemID)); }
+        // åˆ¤æ–·æ˜¯å¦è¦è¨­å®šé¡è‰²
+        if (this.itemID == 298 || this.itemID == 299|| this.itemID == 300 || this.itemID == 301)
+        {
+            LeatherArmorMeta = (LeatherArmorMeta)ResultItem.getItemMeta();
+            LeatherArmorMeta.setColor(Color.fromRGB(this.red, this.green, this.blue));
+            ResultItem.setItemMeta(LeatherArmorMeta);
+        }
+        newItemMeta = ResultItem.getItemMeta();
+        // é™„é­”
+        for (int i = 0; i < this.enchants.size(); i++)
+        {
+            String[] EnchantsParts = this.enchants.get(i).split(":");
+            int level = Integer.parseInt(EnchantsParts[1]);
+            Enchantment enchantment = Enchantment.getByName(EnchantsParts[0]);
+            newItemMeta.addEnchant(enchantment, level, true);
+        }
+        // åç¨±
+        if (this.useOriginalName == 0)
+        {
+            newItemMeta.setDisplayName(this.itemName);
+        }
+        // èªªæ˜
+        if (this.itemLores.size() > 0)
+        {
+            newItemMeta.setLore(this.itemLores);
+        }
+        // å¯«å…¥è³‡æ–™
+        ResultItem.setItemMeta(newItemMeta);
+        // è¨­å®šæ•¸é‡
+        ResultItem.setAmount(this.quantity);
+        // è¨­å®šè€ä¹…ç‚ºæœ€é«˜
+        ResultItem.setDurability((short)0);
+        // å›å‚³
+        return ResultItem;
+    }
 }

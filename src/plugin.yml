@@ -1,0 +1,9 @@
+﻿name: CustomDrop
+author: kunyihua(origin) clo5de(meow)
+main: com.kunyihua.customdrop.Main
+version: 1.1.0
+commands:
+   cdrop:
+      description: CustomDrop Commands.
+      permission: CustomDrop.cdrop
+      permission-message: 你沒有足夠的權限

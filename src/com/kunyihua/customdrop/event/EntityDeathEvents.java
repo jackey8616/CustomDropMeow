@@ -1,63 +1,47 @@
 package com.kunyihua.customdrop.event;
 
-import java.lang.Math;
-import java.util.List;
-
+import com.kunyihua.customdrop.GlobalVar;
+import com.kunyihua.customdrop.craftclass.CustomItem;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import com.kunyihua.customdrop.GlobalVar;
-import com.kunyihua.customdrop.craftclass.CustomItem;
+import java.util.List;
 
-public class EntityDeathEvents implements Listener
-{
-    public EntityDeathEvents()
-    {
-    	
-	}
-    
-	@SuppressWarnings("deprecation")
-	@EventHandler
-    public void onEntityDeathEvents(EntityDeathEvent event)
-    {
-    	// ¨ú±o¦º±¼ªº¥Íª«¹êÅé
-    	LivingEntity entityDeth = event.getEntity();
-    	// §PÂ_¬O§_¬°ª±®a±þ¦ºªº
-    	if (entityDeth.getKiller() != null &&
-    		entityDeth.getKiller() instanceof Player)
-    	{
-    		Player killBy = entityDeth.getKiller();
-    		String sEntitlyName = "";
-    		sEntitlyName = entityDeth.getType().getName().toUpperCase();
-    		// §PÂ_¬O§_¦³±¼¸¨ª«²M³æ
-    		if (GlobalVar.CustomItemMap.containsKey(sEntitlyName))
-    		{
-    			// ¨ú±o±¼¸¨ª«²M³æ
-    			List<CustomItem> dropItems = GlobalVar.CustomItemMap.get(sEntitlyName);
-    			CustomItem customItem;
-    			// °j°é§PÂ_¬O§_±¼¸¨ª««~
-    			for (int i = 0; i < dropItems.size(); i++)
-    			{
-    				customItem = dropItems.get(i);
-    				// §PÂ_¥@¬É¬O§_¥¿½T
-    				if (customItem.OnlyWorld.equals("") || customItem.OnlyWorld.toUpperCase().equals(entityDeth.getWorld().getName().toUpperCase()))
-    				{
-    					// ¨ú±o°ò¼Æ(±q1~10000¤¤©â¤@­Ó¸¹½X)
-        				int iChance = (int)(Math.random() * 10000 + 1);
-        				// §PÂ_ª««~±¼¸¨¾÷²v(­¼¥H100«á)¬O§_¤p©ó°ò¼Æ
-        				if (iChance <= (customItem.Chance * 100))
-        				{
-        					// §P©w±¼¸¨
-        					entityDeth.getWorld().dropItemNaturally(entityDeth.getLocation(), customItem.getResultItem());
-        					// Åã¥Ü±¼¸¨°T®§
-        					killBy.sendMessage(GlobalVar.GetEntityName(sEntitlyName) + "¡±6±¼¸¨¤F¡±f" + customItem.ItemName);
-        				}
-    				}
-    			}
-    		}
-    	}
+public class EntityDeathEvents implements Listener {
+    public EntityDeathEvents() {
+
+    }
+
+    @SuppressWarnings("deprecation")
+    @EventHandler
+    public void onEntityDeathEvents(EntityDeathEvent event) {
+        // å–å¾—æ­»æŽ‰çš„ç”Ÿç‰©å¯¦é«”
+        LivingEntity entityDeth = event.getEntity();
+        // åˆ¤æ–·æ˜¯å¦ç‚ºçŽ©å®¶æ®ºæ­»çš„
+        if (entityDeth.getKiller() != null && entityDeth.getKiller() instanceof Player) {
+            Player killBy = entityDeth.getKiller();
+            String sEntitlyName = entityDeth.getType().getName().toUpperCase();
+            // åˆ¤æ–·æ˜¯å¦æœ‰æŽ‰è½ç‰©æ¸…å–®
+            if (GlobalVar.CustomItemMap.containsKey(sEntitlyName)) {
+                // è¿´åœˆåˆ¤æ–·æ˜¯å¦æŽ‰è½ç‰©å“
+                for (CustomItem customItem : GlobalVar.CustomItemMap.get(sEntitlyName)) {
+                    // åˆ¤æ–·ä¸–ç•Œæ˜¯å¦æ­£ç¢º
+                    if (customItem.onlyWorld.equals("") || customItem.onlyWorld.toUpperCase().equals(entityDeth.getWorld().getName().toUpperCase())) {
+                        // å–å¾—åŸºæ•¸(å¾ž1~10000ä¸­æŠ½ä¸€å€‹è™Ÿç¢¼)
+                        int iChance = (int) (Math.random() * 10000 + 1);
+                        // åˆ¤æ–·ç‰©å“æŽ‰è½æ©ŸçŽ‡(ä¹˜ä»¥100å¾Œ)æ˜¯å¦å°æ–¼åŸºæ•¸
+                        if (iChance <= (customItem.chance * 100)) {
+                            // åˆ¤å®šæŽ‰è½
+                            entityDeth.getWorld().dropItemNaturally(entityDeth.getLocation(), customItem.getResultItem());
+                            // é¡¯ç¤ºæŽ‰è½è¨Šæ¯
+                            killBy.sendMessage(GlobalVar.GetEntityName(sEntitlyName) + "Â§6æŽ‰è½äº†Â§f" + customItem.itemName);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

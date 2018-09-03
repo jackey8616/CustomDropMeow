@@ -1,352 +1,218 @@
 package com.kunyihua.customdrop.config;
 
+import com.kunyihua.customdrop.GlobalVar;
+import com.kunyihua.customdrop.craftclass.CustomItem;
+import org.bukkit.configuration.MemorySection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.File;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+public class LoadConfig {
+    // ä¸»è¦è®€å–è¨­å®šç”¨
+    private FileConfiguration data = null;
 
-import com.kunyihua.customdrop.craftclass.CustomItem;
-import com.kunyihua.customdrop.GlobalVar;
+    // é–‹æª”ç”¨
+    private File filePreload = null;
 
-public class LoadConfig
-{	
-	// ¥D­nÅª¨ú³]©w¥Î
-	private FileConfiguration data = null;
-	
-	// ¶}ÀÉ¥Î
-	private File filePreload = null;
-	
-	public LoadConfig()
-	{
-		
-	}
-	
-	// ­«Åª³]©wÀÉ
-	public void ReloadConfig()
-	{
-		// ½T»{ÀÉ®×¬O§_¦s¦b
-	    this.filePreload = new File(GlobalVar.pluginMainDir + "config.yml");
-	    if (this.filePreload.exists())
-	    {
-	    	// Åª¨ú³]©wÀÉ¤º®e
-	    	this.data = YamlConfiguration.loadConfiguration(this.filePreload);
-	    }
-	    else
-	    {
-	    	// ÀÉ®×¤£¦s¦b¡A«Ø¥ß¹w³]ÀÉ
-	    	CreateDefaultConfig();
-	    	// ­«¸üÀÉ®×
-	    	this.filePreload = new File(GlobalVar.pluginMainDir + "config.yml");
-	    	// Åª¨ú³]©wÀÉ¤º®e
-	    	this.data = YamlConfiguration.loadConfiguration(this.filePreload);
-	    }
-	    
-		if (data.contains("CustomDrop"))
-	    {
-			// ±¼¸¨ªºª««~¦WºÙ
-			String ItemName = "";
-			// ±¼¸¨ªºª««~¬O§_®M¥Î­ì©l¦WºÙ
-			int UseOriginalName = 0;
-			// ±¼¸¨ªºª««~»¡©ú
-			List<String> ItemLores = new ArrayList<String>();
-			// ±¼¸¨ªºª««~ID(­ì©lID)
-			int ItemID = 0;
-			// ¦â±m
-			byte Red = 0;
-			byte Green = 0;
-			byte Blue = 0;
-			// ±¼¸¨ªºª««~ªşÄİID(­ì©lID)
-			byte ItemSubID = 0;
-			// ±¼¸¨ªºª««~ªşÅ]
-			List<String> Enchants = new ArrayList<String>();
-			// ±¼¸¨ªºª««~¼Æ¶q
-			int Quantity = 1;
-			// ±¼¸¨ªº¾÷²v
-			double Chance = 1000;
-			// Âê©w¦a¹Ï
-			String OnlyWorld = "";
-			// ©î¸Ñª««~ªşÄİID¥Î
-			String strItemID = "";
-			
-			// «İÀx¦sªº±¼¸¨ª«²M³æ
-			List<CustomItem> dropItems = new ArrayList<CustomItem>();
-			
-			// ¨ú±o¥Íª«¦WºÙ
-			for (String entity_name : data.getConfigurationSection("CustomDrop").getKeys(false))
-		    {
-				// ²MªÅ¼È¦s°Ï
-				dropItems = new ArrayList<CustomItem>();
-				// °j°éÅª¥X±¼¸¨ª«
-				for (String name : data.getConfigurationSection("CustomDrop." + entity_name).getKeys(false))
-			    {
-					// ###########################################
-					// ²MªÅ¼È¦s°Ï
-					// ###########################################
-					// ±¼¸¨ªºª««~¦WºÙ
-					ItemName = "";
-					// ±¼¸¨ªºª««~¬O§_®M¥Î­ì©l¦WºÙ
-					UseOriginalName = 0;
-					// ±¼¸¨ªºª««~»¡©ú
-					ItemLores = new ArrayList<String>();
-					// ±¼¸¨ªºª««~ID(­ì©lID)
-					ItemID = 0;
-					// ¦â±m
-					Red = 0;
-					Green = 0;
-					Blue = 0;
-					// ±¼¸¨ªºª««~ªşÄİID(­ì©lID)
-					ItemSubID = 0;
-					// ±¼¸¨ªºª««~ªşÅ]
-					Enchants = new ArrayList<String>();
-					// ±¼¸¨ªºª««~¼Æ¶q
-					Quantity = 1;
-					// ±¼¸¨ªº¾÷²v
-					Chance = 1000;
-					// Âê©w¦a¹Ï
-					OnlyWorld = "";
-					// ©î¸Ñª««~ªşÄİID¥Î
-					strItemID = "";
-					// ###########################################
-					// ¶}©lÅª¨ú¤º®e
-					// ###########################################
-					// Åª¨úª««~¦WºÙ
-					ItemName = name.replaceAll("_", " ");
-					// ¬O§_®M¥Î­ì©l¦WºÙ
-					if (data.contains("CustomDrop." + entity_name + "." + name + ".UseCustomName"))
-					{
-						UseOriginalName = this.data.getInt("CustomDrop." + entity_name + "." + name + ".UseCustomName");
-					}
-					// ª««~»¡©ú
-					if (data.contains("CustomDrop." + entity_name + "." + name + ".ItemLores"))
-					{
-						ItemLores = this.data.getStringList("CustomDrop." + entity_name + "." + name + ".ItemLores");
-						for (int i = 0; i < ItemLores.size(); i++)
-						{
-							ItemLores.set(i, ItemLores.get(i).replace("_", " "));
-						}
-					}
-					// ª««~ID
-					if (data.contains("CustomDrop." + entity_name + "." + name + ".ItemID"))
-					{
-						strItemID = this.data.getString("CustomDrop." + entity_name + "." + name + ".ItemID");
-						// §PÂ_¦³µL¤lID
-						if (strItemID.indexOf(":") != -1)
-						{
-							ItemID = Integer.parseInt(strItemID.split(":")[0]);
-							// §PÂ_¬O§_¬°¥Ö¥Ò(¤lID¬°¬V¦â½X)
-							if (ItemID == 298 || ItemID == 299 || ItemID == 300 || ItemID == 301)
-							{
-								Red = Byte.parseByte(strItemID.split(":")[1].split(",")[0]);
-								Green = Byte.parseByte(strItemID.split(":")[1].split(",")[1]);
-								Blue = Byte.parseByte(strItemID.split(":")[1].split(",")[2]);
-							}
-							else
-							{
-								ItemSubID = Byte.parseByte(strItemID.split(":")[1]);
-							}
-						}
-						else
-						{
-							ItemID = Integer.parseInt(strItemID);
-							ItemSubID = 0;
-						}
-					}
-					// ¨ú±oªşÅ]
-					if (data.contains("CustomDrop." + entity_name + "." + name + ".Enchants"))
-					{
-						Enchants = this.data.getStringList("CustomDrop." + entity_name + "." + name + ".Enchants");
-					}
-					if (data.contains("CustomDrop." + entity_name + "." + name + ".Quantity"))
-					{
-						Quantity = this.data.getInt("CustomDrop." + entity_name + "." + name + ".Quantity");
-					}
-					if (data.contains("CustomDrop." + entity_name + "." + name + ".Chance"))
-					{
-						Chance = this.data.getDouble("CustomDrop." + entity_name + "." + name + ".Chance");
-					}
-					if (data.contains("CustomDrop." + entity_name + "." + name + ".OnlyWorld"))
-					{
-						OnlyWorld = this.data.getString("CustomDrop." + entity_name + "." + name + ".OnlyWorld");
-					}
-					// §PÂ_¬O§_¦³¥²­n¸ê°T
-					if (ItemID > 0)
-					{
-						// ¥[¤J
-						dropItems.add(new CustomItem(ItemName, UseOriginalName, ItemLores, ItemID, Red, Green, Blue, ItemSubID, Enchants, Quantity, Chance, OnlyWorld));
-					}
-					else
-					{
-						// Äµ§i
-						System.out.println(GlobalVar.detailStr + "[ReloadConfig]" + entity_name + "ªº±¼¸¨ª«" + name + "¥¼³]©wItemID!");
-					}
-			    }
-				GlobalVar.CustomItemMap.put(entity_name, dropItems);
-		    }
-	    }
-	}
-	
-	// «Ø¥ß¹w³]ÀÉ
-	public void CreateDefaultConfig()
-	{
-		try
-		{
-			File createDir = new File(GlobalVar.pluginMainDir);
-	
-			if (!createDir.exists())
-			{
-				boolean dirCreated = false;
-	
-				int retries = 15;
-	
-				while ((!dirCreated) && (retries != 0))
-				{
-					retries--;
-					dirCreated = createDir.mkdir();
-				}
-	
-				if (!dirCreated)
-				{
-					System.out.println(GlobalVar.detailStr + "[CreateDefaultConfig]Directory failed to create. No permissions?");
-					return;
-				}
-			}
+    public LoadConfig() {
 
-			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(GlobalVar.pluginMainDir + "config.yml")));
-			out.write("CustomDrop:\r\n");
-			out.write("#==========================#\r\n");
-			out.write("#¥Íª«¹êÅéID                #\r\n");
-			out.write("#CREEPER       : ­W¤O©È    #\r\n");
-			out.write("#SKELETON      : ¾uÅ\      #\r\n");
-			out.write("#SPIDER        : »jµï      #\r\n");
-			out.write("#GIANT         : ¥¨¤H      #\r\n");
-			out.write("#ZOMBIE        : íL«Í      #\r\n");
-			out.write("#SLIME         : ¥vµÜ©i    #\r\n");
-			out.write("#GHAST         : «ÕÆF¤ô¥À  #\r\n");
-			out.write("#PIGZOMBIE     : íL«Í½Ş¤H  #\r\n");
-			out.write("#ENDERMAN      : ²×¬É¨ÏªÌ  #\r\n");
-			out.write("#CAVESPIDER    : ¬}¥Ş»jµï  #\r\n");
-			out.write("#SILVERFISH    : ¥ÛÀYÂÎ    #\r\n");
-			out.write("#BLAZE         : ¯PµK¨ÏªÌ  #\r\n");
-			out.write("#LAVASLIME     : ¯PµK¥vµÜ©i#\r\n");
-			out.write("#ENDERDRAGON   : ²×¬ÉÀs    #\r\n");
-			out.write("#WITHERBOSS    : ­ä¹s©Ç    #\r\n");
-			out.write("#WITCH       ¡@: §Å±C      #\r\n");
-			out.write("#BAT           : ½¿½»      #\r\n");
-			out.write("#PIG           : ½Ş        #\r\n");
-			out.write("#SHEEP         : ¦Ï        #\r\n");
-			out.write("#COW           : ¤û        #\r\n");
-			out.write("#CHICKEN       : Âû        #\r\n");
-			out.write("#SQUID         : ³¹³½      #\r\n");
-			out.write("#WOLF          : ¯T        #\r\n");
-			out.write("#MUSHROOMCOW   : Ä¨Û£¤û    #\r\n");
-			out.write("#SNOWMAN       : ³·¤H      #\r\n");
-			out.write("#OZELOT        : ¿ß        #\r\n");
-			out.write("#VILLAGERGOLEM : ÅK¤H      #\r\n");
-			out.write("#ENTITYHORSE   : °¨        #\r\n");
-			out.write("#VILLAGER      : §ø¥Á      #\r\n");
-			out.write("#==========================#\r\n");
-			out.write("  ZOMBIE:\r\n");
-			out.write("#==============#\r\n");
-			out.write("#±¼¸¨ªºª««~¦WºÙ#\r\n");
-			out.write("#==============#\r\n");
-			out.write("    ¡±f§õ³p»»ªº¤ì¼C¡±f:\r\n");
-			out.write("#==========================#\r\n");
-			out.write("#±¼¸¨ªºª««~¬O§_®M¥Î­ì©l¦WºÙ#\r\n");
-			out.write("#==========================#\r\n");
-			out.write("      UseOriginalName: 1\r\n");
-			out.write("#==============================#\r\n");
-			out.write("#±¼¸¨ªºª««~­ì©lID(¨Ò¡G¤ì¼C=268)#\r\n");
-			out.write("#==============================#\r\n");
-			out.write("      ItemID: 268\r\n");
-			out.write("#==============#\r\n");
-			out.write("#±¼¸¨ªºª««~»¡©ú#\r\n");
-			out.write("#==============#\r\n");
-			out.write("      ItemLores:\r\n");
-			out.write("      - ¡±e§õ³p»»¦Û¤v«d¥X¨Óªº¤ì¼C¡±f\r\n");
-			out.write("#=============================#\r\n");
-			out.write("#±¼¸¨ªºª««~ªşÅ]               #\r\n");
-			out.write("#- <ªşÅ]>:<µ¥¯Å>              #\r\n");
-			out.write("#PROTECTION_ENVIRONMENTAL «OÅ@#\r\n");
-			out.write("#PROTECTION_EXPLOSIONS ¨¾Ãz   #\r\n");
-			out.write("#PROTECTION_PROJECTILE ¨¾¼u   #\r\n");
-			out.write("#PROTECTION_FIRE §Ü¤õ         #\r\n");
-			out.write("#PROTECTION_FALL »´¬Õ(¸})     #\r\n");
-			out.write("#ARROW_INFINITE µL­­¤}        #\r\n");
-			out.write("#ARROW_DAMAGE ±j¤O¤}          #\r\n");
-			out.write("#ARROW_FIRE ¤õ¿V¤}            #\r\n");
-			out.write("#ARROW_KNOCKBACK ¤}À»°h       #\r\n");
-			out.write("#DAMAGE_UNDEAD ¤£¦º«g¬P       #\r\n");
-			out.write("#DAMAGE_ALL ¾W§Q              #\r\n");
-			out.write("#DAMAGE_ARTHROPODS ¸`ªÏ«g¬P   #\r\n");
-			out.write("#OXYGEN ®ñ®ğ(ÀY)              #\r\n");
-			out.write("#DURABILITY ­@¤[              #\r\n");
-			out.write("#LOOT_BONUS_BLOCKS ©¯¹B       #\r\n");
-			out.write("#LOOT_BONUS_MOBS ±°¹Ü         #\r\n");
-			out.write("#SILK_TOUCH µ·º÷¤§Ä²          #\r\n");
-			out.write("#WATER_WORKER ¿Ë¤ô©Ê          #\r\n");
-			out.write("#DIG_SPEED ®Ä²v               #\r\n");
-			out.write("#KNOCKBACK À»°h¼C             #\r\n");
-			out.write("#FIRE_ASPECT ¤õµKªş¥[         #\r\n");
-			out.write("#=============================#\r\n");
-			out.write("      Enchants:\r\n");
-			out.write("      - DAMAGE_ALL:1\r\n");
-			out.write("#==================#\r\n");
-			out.write("#±¼¸¨ªºª««~¼Æ¶q    #\r\n");
-			out.write("#µù¡GªşÅ]ª««~µL®Ä  #\r\n");
-			out.write("#==================#\r\n");
-			out.write("      Quantity: 1\r\n");
-			out.write("#========================#\r\n");
-			out.write("#±¼¸¨ªº¾÷²v(0.01~100)    #\r\n");
-			out.write("#­YµL¦¹³]©w«hªí¥Ü100%±¼¸¨#\r\n");
-			out.write("#========================#\r\n");
-			out.write("      Chance: 100\r\n");
-			out.write("#============================#\r\n");
-			out.write("#«ü©w±¼¸¨ªº¥@¬É              #\r\n");
-			out.write("#­YµL¦¹³]©w«h¥ş³¡¥@¬É³£·|±¼¸¨#\r\n");
-			out.write("#============================#\r\n");
-			out.write("      OnlyWorld: world\r\n");
-			out.write("#========#\r\n");
-			out.write("#¨ä¥L½d¨Ò#\r\n");
-			out.write("#========#\r\n");
-			out.write("  PIGZOMBIE:\r\n");
-			out.write("    ¡±f¶°¦r¥d-¡uíL¡v¡±f:\r\n");
-			out.write("      ItemID: 339\r\n");
-			out.write("      ItemLores:\r\n");
-			out.write("      - ¡±e¶°º¡¡uíL¡v¡u«Í¡v¡u½Ş¡v¡u¤H¡v¡±f\r\n");
-			out.write("      - ¡±e§Y¥i¦X¦¨íL«Í½Ş¤Hªº¶¼®Æ¡±f\r\n");
-			out.write("      Quantity: 1\r\n");
-			out.write("      Chance: 25\r\n");
-			out.write("    ¡±f¶°¦r¥d-¡u«Í¡v¡±f:\r\n");
-			out.write("      ItemID: 339\r\n");
-			out.write("      ItemLores:\r\n");
-			out.write("      - ¡±e¶°º¡¡uíL¡v¡u«Í¡v¡u½Ş¡v¡u¤H¡v¡±f\r\n");
-			out.write("      - ¡±e§Y¥i¦X¦¨íL«Í½Ş¤Hªº¶¼®Æ¡±f\r\n");
-			out.write("      Quantity: 1\r\n");
-			out.write("      Chance: 25\r\n");
-			out.write("    ¡±f¶°¦r¥d-¡u½Ş¡v¡±f:\r\n");
-			out.write("      ItemID: 339\r\n");
-			out.write("      ItemLores:\r\n");
-			out.write("      - ¡±e¶°º¡¡uíL¡v¡u«Í¡v¡u½Ş¡v¡u¤H¡v¡±f\r\n");
-			out.write("      - ¡±e§Y¥i¦X¦¨íL«Í½Ş¤Hªº¶¼®Æ¡±f\r\n");
-			out.write("      Quantity: 1\r\n");
-			out.write("      Chance: 25\r\n");
-			out.write("    ¡±f¶°¦r¥d-¡u¤H¡v¡±f:\r\n");
-			out.write("      ItemID: 339\r\n");
-			out.write("      ItemLores:\r\n");
-			out.write("      - ¡±e¶°º¡¡uíL¡v¡u«Í¡v¡u½Ş¡v¡u¤H¡v¡±f\r\n");
-			out.write("      - ¡±e§Y¥i¦X¦¨íL«Í½Ş¤Hªº¶¼®Æ¡±f\r\n");
-			out.write("      Quantity: 1\r\n");
-			out.write("      Chance: 25\r\n");
-		    out.close();
-		}
-		catch (Exception e)
-		{
-			System.out.println(GlobalVar.detailStr + "[CreateDefaultConfig]Error on create default config!");
-		}
-	}
+    }
+
+    // é‡è®€è¨­å®šæª”
+    public void ReloadConfig() {
+        // ç¢ºèªæª”æ¡ˆæ˜¯å¦å­˜åœ¨
+        this.filePreload = new File(GlobalVar.pluginMainDir + "config.yml");
+        if (this.filePreload.exists()) {
+            // è®€å–è¨­å®šæª”å…§å®¹
+            this.data = YamlConfiguration.loadConfiguration(this.filePreload);
+        } else {
+            // æª”æ¡ˆä¸å­˜åœ¨ï¼Œå»ºç«‹é è¨­æª”
+            CreateDefaultConfig();
+            // é‡è¼‰æª”æ¡ˆ
+            this.filePreload = new File(GlobalVar.pluginMainDir + "config.yml");
+            // è®€å–è¨­å®šæª”å…§å®¹
+            this.data = YamlConfiguration.loadConfiguration(this.filePreload);
+        }
+
+        if (data.contains("CustomDrop")) {
+            // å¾…å„²å­˜çš„æ‰è½ç‰©æ¸…å–®
+            List<CustomItem> dropItems = new ArrayList<CustomItem>();
+            // å–å¾—ç”Ÿç‰©åç¨±
+            for (String entity_name : data.getConfigurationSection("CustomDrop").getKeys(false)) {
+                // æ¸…ç©ºæš«å­˜å€
+                dropItems = new ArrayList<CustomItem>();
+                // è¿´åœˆè®€å‡ºæ‰è½ç‰©
+                for (String name : data.getConfigurationSection("CustomDrop." + entity_name).getKeys(false)) {
+                    CustomItem customItem = new CustomItem(name, (MemorySection) data.getConfigurationSection("CustomDrop." + entity_name));
+                    if (customItem.itemID > 0) {
+                        // åŠ å…¥
+                        dropItems.add(customItem);
+                    } else {
+                        // è­¦å‘Š
+                        System.out.println(GlobalVar.detailStr + "[ReloadConfig]" + entity_name + "çš„æ‰è½ç‰©" + name + "æœªè¨­å®šItemID!");
+                    }
+                }
+                GlobalVar.CustomItemMap.put(entity_name, dropItems);
+            }
+        }
+    }
+
+    // å»ºç«‹é è¨­æª”
+    public void CreateDefaultConfig() {
+        try {
+            File createDir = new File(GlobalVar.pluginMainDir);
+
+            if (!createDir.exists()) {
+                boolean dirCreated = false;
+
+                int retries = 15;
+
+                while ((!dirCreated) && (retries != 0)) {
+                    retries--;
+                    dirCreated = createDir.mkdir();
+                }
+
+                if (!dirCreated) {
+                    System.out.println(GlobalVar.detailStr + "[CreateDefaultConfig]Directory failed to create. No permissions?");
+                    return;
+                }
+            }
+
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(GlobalVar.pluginMainDir + "config.yml"), "UTF-8"));
+            out.write("CustomDrop:\r\n");
+            out.write("#==========================#\r\n");
+            out.write("#ç”Ÿç‰©å¯¦é«”ID                #\r\n");
+            out.write("#CREEPER       : è‹¦åŠ›æ€•    #\r\n");
+            out.write("#SKELETON      : éª·é«      #\r\n");
+            out.write("#SPIDER        : èœ˜è››      #\r\n");
+            out.write("#GIANT         : å·¨äºº      #\r\n");
+            out.write("#ZOMBIE        : æ®­å±      #\r\n");
+            out.write("#SLIME         : å²èŠå§†    #\r\n");
+            out.write("#GHAST         : å¹½éˆæ°´æ¯  #\r\n");
+            out.write("#PIGZOMBIE     : æ®­å±è±¬äºº  #\r\n");
+            out.write("#ENDERMAN      : çµ‚ç•Œä½¿è€…  #\r\n");
+            out.write("#CAVESPIDER    : æ´ç©´èœ˜è››  #\r\n");
+            out.write("#SILVERFISH    : çŸ³é ­èŸ²    #\r\n");
+            out.write("#BLAZE         : çƒˆç„°ä½¿è€…  #\r\n");
+            out.write("#LAVASLIME     : çƒˆç„°å²èŠå§†#\r\n");
+            out.write("#ENDERDRAGON   : çµ‚ç•Œé¾    #\r\n");
+            out.write("#WITHERBOSS    : å‡‹é›¶æ€ª    #\r\n");
+            out.write("#WITCH       ã€€: å·«å©†      #\r\n");
+            out.write("#BAT           : è™è       #\r\n");
+            out.write("#PIG           : è±¬        #\r\n");
+            out.write("#SHEEP         : ç¾Š        #\r\n");
+            out.write("#COW           : ç‰›        #\r\n");
+            out.write("#CHICKEN       : é›        #\r\n");
+            out.write("#SQUID         : ç« é­š      #\r\n");
+            out.write("#WOLF          : ç‹¼        #\r\n");
+            out.write("#MUSHROOMCOW   : è˜‘è‡ç‰›    #\r\n");
+            out.write("#SNOWMAN       : é›ªäºº      #\r\n");
+            out.write("#OZELOT        : è²“        #\r\n");
+            out.write("#VILLAGERGOLEM : éµäºº      #\r\n");
+            out.write("#ENTITYHORSE   : é¦¬        #\r\n");
+            out.write("#VILLAGER      : æ‘æ°‘      #\r\n");
+            out.write("#==========================#\r\n");
+            out.write("  ZOMBIE:\r\n");
+            out.write("#==============#\r\n");
+            out.write("#æ‰è½çš„ç‰©å“åç¨±#\r\n");
+            out.write("#==============#\r\n");
+            out.write("    Â§fæé€é™çš„æœ¨åŠÂ§f:\r\n");
+            out.write("#==========================#\r\n");
+            out.write("#æ‰è½çš„ç‰©å“æ˜¯å¦å¥—ç”¨åŸå§‹åç¨±#\r\n");
+            out.write("#==========================#\r\n");
+            out.write("      UseOriginalName: 1\r\n");
+            out.write("#==============================#\r\n");
+            out.write("#æ‰è½çš„ç‰©å“åŸå§‹ID(ä¾‹ï¼šæœ¨åŠ=268)#\r\n");
+            out.write("#==============================#\r\n");
+            out.write("      ItemID: 268\r\n");
+            out.write("#==============#\r\n");
+            out.write("#æ‰è½çš„ç‰©å“èªªæ˜#\r\n");
+            out.write("#==============#\r\n");
+            out.write("      ItemLores:\r\n");
+            out.write("      - Â§eæé€é™è‡ªå·±å‰Šå‡ºä¾†çš„æœ¨åŠÂ§f\r\n");
+            out.write("#=============================#\r\n");
+            out.write("#æ‰è½çš„ç‰©å“é™„é­”               #\r\n");
+            out.write("#- <é™„é­”>:<ç­‰ç´š>              #\r\n");
+            out.write("#PROTECTION_ENVIRONMENTAL ä¿è­·#\r\n");
+            out.write("#PROTECTION_EXPLOSIONS é˜²çˆ†   #\r\n");
+            out.write("#PROTECTION_PROJECTILE é˜²å½ˆ   #\r\n");
+            out.write("#PROTECTION_FIRE æŠ—ç«         #\r\n");
+            out.write("#PROTECTION_FALL è¼•ç›ˆ(è…³)     #\r\n");
+            out.write("#ARROW_INFINITE ç„¡é™å¼“        #\r\n");
+            out.write("#ARROW_DAMAGE å¼·åŠ›å¼“          #\r\n");
+            out.write("#ARROW_FIRE ç«ç‡„å¼“            #\r\n");
+            out.write("#ARROW_KNOCKBACK å¼“æ“Šé€€       #\r\n");
+            out.write("#DAMAGE_UNDEAD ä¸æ­»å‰‹æ˜Ÿ       #\r\n");
+            out.write("#DAMAGE_ALL é‹’åˆ©              #\r\n");
+            out.write("#DAMAGE_ARTHROPODS ç¯€è‚¢å‰‹æ˜Ÿ   #\r\n");
+            out.write("#OXYGEN æ°§æ°£(é ­)              #\r\n");
+            out.write("#DURABILITY è€ä¹…              #\r\n");
+            out.write("#LOOT_BONUS_BLOCKS å¹¸é‹       #\r\n");
+            out.write("#LOOT_BONUS_MOBS æ å¥ª         #\r\n");
+            out.write("#SILK_TOUCH çµ²ç¶¢ä¹‹è§¸          #\r\n");
+            out.write("#WATER_WORKER è¦ªæ°´æ€§          #\r\n");
+            out.write("#DIG_SPEED æ•ˆç‡               #\r\n");
+            out.write("#KNOCKBACK æ“Šé€€åŠ             #\r\n");
+            out.write("#FIRE_ASPECT ç«ç„°é™„åŠ          #\r\n");
+            out.write("#=============================#\r\n");
+            out.write("      Enchants:\r\n");
+            out.write("      - DAMAGE_ALL:1\r\n");
+            out.write("#==================#\r\n");
+            out.write("#æ‰è½çš„ç‰©å“æ•¸é‡    #\r\n");
+            out.write("#è¨»ï¼šé™„é­”ç‰©å“ç„¡æ•ˆ  #\r\n");
+            out.write("#==================#\r\n");
+            out.write("      Quantity: 1\r\n");
+            out.write("#========================#\r\n");
+            out.write("#æ‰è½çš„æ©Ÿç‡(0.01~100)    #\r\n");
+            out.write("#è‹¥ç„¡æ­¤è¨­å®šå‰‡è¡¨ç¤º100%æ‰è½#\r\n");
+            out.write("#========================#\r\n");
+            out.write("      Chance: 100\r\n");
+            out.write("#============================#\r\n");
+            out.write("#æŒ‡å®šæ‰è½çš„ä¸–ç•Œ              #\r\n");
+            out.write("#è‹¥ç„¡æ­¤è¨­å®šå‰‡å…¨éƒ¨ä¸–ç•Œéƒ½æœƒæ‰è½#\r\n");
+            out.write("#============================#\r\n");
+            out.write("      OnlyWorld: world\r\n");
+            out.write("#========#\r\n");
+            out.write("#å…¶ä»–ç¯„ä¾‹#\r\n");
+            out.write("#========#\r\n");
+            out.write("  PIGZOMBIE:\r\n");
+            out.write("    Â§fé›†å­—å¡-ã€Œæ®­ã€Â§f:\r\n");
+            out.write("      ItemID: 339\r\n");
+            out.write("      ItemLores:\r\n");
+            out.write("      - Â§eé›†æ»¿ã€Œæ®­ã€ã€Œå±ã€ã€Œè±¬ã€ã€Œäººã€Â§f\r\n");
+            out.write("      - Â§eå³å¯åˆæˆæ®­å±è±¬äººçš„é£²æ–™Â§f\r\n");
+            out.write("      Quantity: 1\r\n");
+            out.write("      Chance: 25\r\n");
+            out.write("    Â§fé›†å­—å¡-ã€Œå±ã€Â§f:\r\n");
+            out.write("      ItemID: 339\r\n");
+            out.write("      ItemLores:\r\n");
+            out.write("      - Â§eé›†æ»¿ã€Œæ®­ã€ã€Œå±ã€ã€Œè±¬ã€ã€Œäººã€Â§f\r\n");
+            out.write("      - Â§eå³å¯åˆæˆæ®­å±è±¬äººçš„é£²æ–™Â§f\r\n");
+            out.write("      Quantity: 1\r\n");
+            out.write("      Chance: 25\r\n");
+            out.write("    Â§fé›†å­—å¡-ã€Œè±¬ã€Â§f:\r\n");
+            out.write("      ItemID: 339\r\n");
+            out.write("      ItemLores:\r\n");
+            out.write("      - Â§eé›†æ»¿ã€Œæ®­ã€ã€Œå±ã€ã€Œè±¬ã€ã€Œäººã€Â§f\r\n");
+            out.write("      - Â§eå³å¯åˆæˆæ®­å±è±¬äººçš„é£²æ–™Â§f\r\n");
+            out.write("      Quantity: 1\r\n");
+            out.write("      Chance: 25\r\n");
+            out.write("    Â§fé›†å­—å¡-ã€Œäººã€Â§f:\r\n");
+            out.write("      ItemID: 339\r\n");
+            out.write("      ItemLores:\r\n");
+            out.write("      - Â§eé›†æ»¿ã€Œæ®­ã€ã€Œå±ã€ã€Œè±¬ã€ã€Œäººã€Â§f\r\n");
+            out.write("      - Â§eå³å¯åˆæˆæ®­å±è±¬äººçš„é£²æ–™Â§f\r\n");
+            out.write("      Quantity: 1\r\n");
+            out.write("      Chance: 25\r\n");
+            out.close();
+        } catch (Exception e) {
+            System.out.println(GlobalVar.detailStr + "[CreateDefaultConfig]Error on create default config!");
+        }
+    }
 }

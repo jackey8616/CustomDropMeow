@@ -1,39 +1,36 @@
 package com.kunyihua.customdrop;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
 import com.kunyihua.customdrop.command.AdminCommands;
-//import com.kunyihua.crafte.scoreboard.Scoreboard;
 import com.kunyihua.customdrop.config.LoadConfig;
 import com.kunyihua.customdrop.event.EntityDeathEvents;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public class Main extends JavaPlugin
-{
-	// ¸ü¤J
-	public void onEnable()
-	{
-		// µù¥U
-		getServer().getPluginManager().registerEvents(new EntityDeathEvents(), this);
-		getCommand("cdrop").setExecutor(new AdminCommands());
-		// ³]©w¥D´¡¥ó
-		GlobalVar.main = this;
-		// ³]©w¦øªA¾¹
-		GlobalVar.server = this.getServer();
-		// Åª¨ú³]©wÀÉ
-		GlobalVar.loadConfig = new LoadConfig();
-		GlobalVar.loadConfig.ReloadConfig();
-		// °T®§
-		GlobalVar.Print("CustomDrop is enabled!");
-	}
-	
-	// ¸ü¥X
-	public void onDisable()
-	{
-		// ²M°£¦X¦¨ªí
-		GlobalVar.server.resetRecipes();
-		// ²M°£¹ï·Óªí
-		GlobalVar.CustomItemMap.clear();
-		// °T®§
-		GlobalVar.Print("CustomDrop is disable!");
-	}
+//import com.kunyihua.crafte.scoreboard.Scoreboard;
+
+public class Main extends JavaPlugin {
+    // ï¿½ï¿½ï¿½J
+    public void onEnable() {
+        // ï¿½ï¿½ï¿½U
+        getServer().getPluginManager().registerEvents(new EntityDeathEvents(), this);
+        getCommand("cdrop").setExecutor(new AdminCommands());
+        // ï¿½]ï¿½wï¿½Dï¿½ï¿½ï¿½ï¿½
+        GlobalVar.main = this;
+        // ï¿½]ï¿½wï¿½ï¿½ï¿½Aï¿½ï¿½
+        GlobalVar.server = this.getServer();
+        // Åªï¿½ï¿½ï¿½]ï¿½wï¿½ï¿½
+        GlobalVar.loadConfig = new LoadConfig();
+        GlobalVar.loadConfig.ReloadConfig();
+        // ï¿½Tï¿½ï¿½
+        GlobalVar.Print("CustomDrop is enabled!");
+    }
+
+    // ï¿½ï¿½ï¿½X
+    public void onDisable() {
+        // ï¿½Mï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½
+        GlobalVar.server.resetRecipes();
+        // ï¿½Mï¿½ï¿½ï¿½ï¿½Óªï¿½
+        GlobalVar.CustomItemMap.clear();
+        // ï¿½Tï¿½ï¿½
+        GlobalVar.Print("CustomDrop is disable!");
+    }
 }

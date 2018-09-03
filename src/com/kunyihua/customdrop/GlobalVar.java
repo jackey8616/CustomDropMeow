@@ -1,75 +1,71 @@
 package com.kunyihua.customdrop;
 
+import com.kunyihua.customdrop.config.LoadConfig;
+import com.kunyihua.customdrop.craftclass.CustomItem;
+import org.bukkit.Server;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-//import java.util.LinkedList;
-
-import org.bukkit.Server;
-
-//import com.herocraftonline.heroes.Heroes;
-import com.kunyihua.customdrop.config.LoadConfig;
-//import com.kunyihua.genie.crafte.scoreboard.Scoreboard;
-import com.kunyihua.customdrop.craftclass.CustomItem;
 
 public class GlobalVar
 {
-	// ¥D´¡¥ó
-	public static Main main;
-	
-	// ³]©wÀÉ
-	public static LoadConfig loadConfig;
-	
-	// ¦øªA¾¹
-	public static Server server;
-	
-	// ´¡¥ó¼ĞÃD
-	public static String detailStr = "[CustomDrop]";
-	
-	// ´¡¥ó¥Ø¿ı
-	public static String pluginMainDir = "./plugins/CustomDrop/";
+    // ä¸»æ’ä»¶
+    public static Main main;
 
-	// ±¼¸¨ª««~²M³æ
-	public static Map<String, List<CustomItem>> CustomItemMap = new HashMap<String, List<CustomItem>>();
+    // è¨­å®šæª”
+    public static LoadConfig loadConfig;
 
-	// Åã¥Ü°T®§
-	public static void Print(String msg)
-	{
-		System.out.print(detailStr + msg);
-	}
-	
-	// ¨ú±o¥Íª«¦WºÙ(¤¤¤å)
-	public static String GetEntityName(String entityId)
-	{
-		if (entityId.equals("CREEPER")) { return "­W¤O©È"; }
-		else if (entityId.equals("SKELETON")) { return "¾uÅ\"; }
-		else if (entityId.equals("SPIDER")) { return "»jµï"; }
-		else if (entityId.equals("GIANT")) { return "¥¨¤H"; }
-		else if (entityId.equals("ZOMBIE")) { return "íL«Í"; }
-		else if (entityId.equals("SLIME")) { return "¥vµÜ©i"; }
-		else if (entityId.equals("GHAST")) { return "«ÕÆF¤ô¥À"; }
-		else if (entityId.equals("PIGZOMBIE")) { return "íL«Í½Ş¤H"; }
-		else if (entityId.equals("ENDERMAN")) { return "²×¬É¨ÏªÌ"; }
-		else if (entityId.equals("CAVESPIDER")) { return "¬}¥Ş»jµï"; }
-		else if (entityId.equals("SILVERFISH")) { return "¥ÛÀYÂÎ"; }
-		else if (entityId.equals("BLAZE")) { return "¯PµK¨ÏªÌ"; }
-		else if (entityId.equals("LAVASLIME")) { return "¯PµK¥vµÜ©i"; }
-		else if (entityId.equals("ENDERDRAGON")) { return "²×¬ÉÀs"; }
-		else if (entityId.equals("WITHERBOSS")) { return "­ä¹s©Ç"; }
-		else if (entityId.equals("WITCH")) { return "§Å±C"; }
-		else if (entityId.equals("BAT")) { return "½¿½»"; }
-		else if (entityId.equals("PIG")) { return "½Ş"; }
-		else if (entityId.equals("SHEEP")) { return "¦Ï"; }
-		else if (entityId.equals("COW")) { return "¤û"; }
-		else if (entityId.equals("CHICKEN")) { return "Âû"; }
-		else if (entityId.equals("SQUID")) { return "³¹³½"; }
-		else if (entityId.equals("WOLF")) { return "¯T"; }
-		else if (entityId.equals("MUSHROOMCOW")) { return "Ä¨Û£¤û"; }
-		else if (entityId.equals("SNOWMAN")) { return "³·¤H"; }
-		else if (entityId.equals("OZELOT")) { return "¿ß"; }
-		else if (entityId.equals("VILLAGERGOLEM")) { return "ÅK¤H"; }
-		else if (entityId.equals("ENTITYHORSE")) { return "°¨"; }
-		else if (entityId.equals("VILLAGER")) { return "§ø¥Á"; }
-		return entityId;
-	}
+    // ä¼ºæœå™¨
+    public static Server server;
+
+    // æ’ä»¶æ¨™é¡Œ
+    public static String detailStr = "[CustomDrop]";
+
+    // æ’ä»¶ç›®éŒ„
+    public static String pluginMainDir = "./plugins/CustomDrop/";
+
+    // æ‰è½ç‰©å“æ¸…å–®
+    public static Map<String, List<CustomItem>> CustomItemMap = new HashMap<String, List<CustomItem>>();
+
+    // é¡¯ç¤ºè¨Šæ¯
+    public static void Print(String msg)
+    {
+        System.out.print(detailStr + msg);
+    }
+
+    // å–å¾—ç”Ÿç‰©åç¨±(ä¸­æ–‡)
+    public static String GetEntityName(String entityId)
+    {
+        if (entityId.equals("CREEPER")) { return "è‹¦åŠ›æ€•"; }
+        else if (entityId.equals("SKELETON")) { return "éª·é«"; }
+        else if (entityId.equals("SPIDER")) { return "èœ˜è››"; }
+        else if (entityId.equals("GIANT")) { return "å·¨äºº"; }
+        else if (entityId.equals("ZOMBIE")) { return "æ®­å±"; }
+        else if (entityId.equals("SLIME")) { return "å²èŠå§†"; }
+        else if (entityId.equals("GHAST")) { return "å¹½éˆæ°´æ¯"; }
+        else if (entityId.equals("PIGZOMBIE")) { return "æ®­å±è±¬äºº"; }
+        else if (entityId.equals("ENDERMAN")) { return "çµ‚ç•Œä½¿è€…"; }
+        else if (entityId.equals("CAVESPIDER")) { return "æ´ç©´èœ˜è››"; }
+        else if (entityId.equals("SILVERFISH")) { return "çŸ³é ­èŸ²"; }
+        else if (entityId.equals("BLAZE")) { return "çƒˆç„°ä½¿è€…"; }
+        else if (entityId.equals("LAVASLIME")) { return "çƒˆç„°å²èŠå§†"; }
+        else if (entityId.equals("ENDERDRAGON")) { return "çµ‚ç•Œé¾"; }
+        else if (entityId.equals("WITHERBOSS")) { return "å‡‹é›¶æ€ª"; }
+        else if (entityId.equals("WITCH")) { return "å·«å©†"; }
+        else if (entityId.equals("BAT")) { return "è™è "; }
+        else if (entityId.equals("PIG")) { return "è±¬"; }
+        else if (entityId.equals("SHEEP")) { return "ç¾Š"; }
+        else if (entityId.equals("COW")) { return "ç‰›"; }
+        else if (entityId.equals("CHICKEN")) { return "é›"; }
+        else if (entityId.equals("SQUID")) { return "ç« é­š"; }
+        else if (entityId.equals("WOLF")) { return "ç‹¼"; }
+        else if (entityId.equals("MUSHROOMCOW")) { return "è˜‘è‡ç‰›"; }
+        else if (entityId.equals("SNOWMAN")) { return "é›ªäºº"; }
+        else if (entityId.equals("OZELOT")) { return "è²“"; }
+        else if (entityId.equals("VILLAGERGOLEM")) { return "éµäºº"; }
+        else if (entityId.equals("ENTITYHORSE")) { return "é¦¬"; }
+        else if (entityId.equals("VILLAGER")) { return "æ‘æ°‘"; }
+        return entityId;
+    }
 }
