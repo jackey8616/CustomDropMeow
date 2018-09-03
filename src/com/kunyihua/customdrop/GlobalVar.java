@@ -25,6 +25,8 @@ public class GlobalVar
     // 插件目錄
     public static String pluginMainDir = "./plugins/CustomDrop/";
 
+    public static boolean kycraftLoaded = false;
+
     // 掉落物品清單
     public static Map<String, List<CustomItem>> CustomItemMap = new HashMap<String, List<CustomItem>>();
 

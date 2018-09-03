@@ -37,7 +37,7 @@ public class EntityDeathEvents implements Listener {
                             // 判定掉落
                             entityDeth.getWorld().dropItemNaturally(entityDeth.getLocation(), customItem.getResultItem());
                             // 顯示掉落訊息
-                            killBy.sendMessage(GlobalVar.GetEntityName(sEntitlyName) + "§6掉落了§f" + customItem.itemName);
+                            killBy.sendMessage(GlobalVar.GetEntityName(sEntitlyName) + "§6掉落了§f" + customItem.itemName + " x " + customItem.quantity);
                         }
                     }
                 }

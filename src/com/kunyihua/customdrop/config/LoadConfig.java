@@ -49,13 +49,18 @@ public class LoadConfig {
                 dropItems = new ArrayList<CustomItem>();
                 // 迴圈讀出掉落物
                 for (String name : data.getConfigurationSection("CustomDrop." + entity_name).getKeys(false)) {
-                    CustomItem customItem = new CustomItem(name, (MemorySection) data.getConfigurationSection("CustomDrop." + entity_name));
-                    if (customItem.itemID > 0) {
-                        // 加入
-                        dropItems.add(customItem);
+                    if (name.startsWith("KYC:") && !GlobalVar.kycraftLoaded) {
+                        System.out.println("Detected KYC config with item name: " + name + " , but Kycraft is not loaded. Skip.");
+                        continue;
                     } else {
-                        // 警告
-                        System.out.println(GlobalVar.detailStr + "[ReloadConfig]" + entity_name + "的掉落物" + name + "未設定ItemID!");
+                        CustomItem customItem = new CustomItem(name, (MemorySection) data.getConfigurationSection("CustomDrop." + entity_name + "." + name));
+                        if (customItem.itemID > 0 || name.toUpperCase().startsWith("KYC:")) {
+                            // 加入
+                            dropItems.add(customItem);
+                        } else {
+                            // 警告
+                            System.out.println(GlobalVar.detailStr + "[ReloadConfig]" + entity_name + "的掉落物" + name + "未設定ItemID!");
+                        }
                     }
                 }
                 GlobalVar.CustomItemMap.put(entity_name, dropItems);

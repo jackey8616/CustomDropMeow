@@ -1,5 +1,7 @@
 package com.kunyihua.customdrop.craftclass;
 
+import com.kunyihua.crafte.api.Bukkit.KycraftBukkitAPI;
+import com.kunyihua.crafte.api.KycraftAPI;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.MemorySection;
@@ -13,6 +15,8 @@ import java.util.List;
 
 public class CustomItem
 {
+    public boolean isKyc;
+    public String kycItemKey;
     //物品名稱
     public String itemName;
     //物品名稱
@@ -37,14 +41,19 @@ public class CustomItem
     public String onlyWorld;
 
     public CustomItem (String itemName, MemorySection config) {
-        this.itemName = itemName;
-        this.useOriginalName = config.contains(itemName + ".UseCustomName") ? config.getInt(itemName + ".UseCustomName") : 0;
-        this.itemLores = this.getItemLores((MemorySection) config.get(itemName));
-        this.getItemID((MemorySection) config.get(itemName));
-        this.enchants = config.contains(itemName + ".Enchants") ? config.getStringList(itemName + ".Enchants") : new ArrayList<>();
-        this.quantity = config.contains(itemName + ".Quantity") ? config.getInt(itemName + ".Quantity") : 1;
-        this.chance = config.contains(itemName + ".Chance") ? config.getDouble(itemName + ".Chance") : 1000;
-        this.onlyWorld = config.contains(itemName + ".OnlyWorld") ? config.getString(itemName + ".OnlyWorld") : "";
+        this.isKyc = itemName.toUpperCase().startsWith("KYC:");
+        if (this.isKyc) {
+            this.kycItemKey = itemName.toUpperCase().replace("KYC:", "");
+        } else {
+            this.itemName = itemName;
+            this.useOriginalName = config.contains("UseCustomName") ? config.getInt("UseCustomName") : 0;
+            this.itemLores = this.getItemLores(config);
+            this.getItemID(config);
+            this.enchants = config.contains("Enchants") ? config.getStringList("Enchants") : new ArrayList<>();
+        }
+        this.quantity = config.contains("Quantity") ? config.getInt("Quantity") : 1;
+        this.chance = config.contains("Chance") ? config.getDouble("Chance") : 1000;
+        this.onlyWorld = config.contains("OnlyWorld") ? config.getString("OnlyWorld") : "";
     }
 
     private List<String> getItemLores (MemorySection config) {
@@ -77,50 +86,53 @@ public class CustomItem
     }
 
     @SuppressWarnings("deprecation")
-    public ItemStack getResultItem()
-    {
-        // 產生物品用
+    public ItemStack getResultItem() {
         ItemStack ResultItem;
         ItemMeta newItemMeta;
-        LeatherArmorMeta LeatherArmorMeta;
+        if (this.isKyc) {
+            ResultItem =  new KycraftBukkitAPI().getKycAPI().getItemByItemKey(this.kycItemKey);
+            newItemMeta = ResultItem.getItemMeta();
+            this.itemName = newItemMeta.getDisplayName();
+        } else {
+            // 產生物品用
+            LeatherArmorMeta LeatherArmorMeta;
 
-        // 合成後得到的物品設定
-        if (this.itemSubID != 0)
-        { ResultItem = new ItemStack(Material.getMaterial(this.itemID), 1, this.itemSubID); }
-        else
-        { ResultItem = new ItemStack(Material.getMaterial(this.itemID)); }
-        // 判斷是否要設定顏色
-        if (this.itemID == 298 || this.itemID == 299|| this.itemID == 300 || this.itemID == 301)
-        {
-            LeatherArmorMeta = (LeatherArmorMeta)ResultItem.getItemMeta();
-            LeatherArmorMeta.setColor(Color.fromRGB(this.red, this.green, this.blue));
-            ResultItem.setItemMeta(LeatherArmorMeta);
-        }
-        newItemMeta = ResultItem.getItemMeta();
-        // 附魔
-        for (int i = 0; i < this.enchants.size(); i++)
-        {
-            String[] EnchantsParts = this.enchants.get(i).split(":");
-            int level = Integer.parseInt(EnchantsParts[1]);
-            Enchantment enchantment = Enchantment.getByName(EnchantsParts[0]);
-            newItemMeta.addEnchant(enchantment, level, true);
+            // 合成後得到的物品設定
+            if (this.itemSubID != 0) {
+                ResultItem = new ItemStack(Material.getMaterial(this.itemID), 1, this.itemSubID);
+            } else {
+                ResultItem = new ItemStack(Material.getMaterial(this.itemID));
+            }
+            // 判斷是否要設定顏色
+            if (this.itemID == 298 || this.itemID == 299 || this.itemID == 300 || this.itemID == 301) {
+                LeatherArmorMeta = (LeatherArmorMeta) ResultItem.getItemMeta();
+                LeatherArmorMeta.setColor(Color.fromRGB(this.red, this.green, this.blue));
+                ResultItem.setItemMeta(LeatherArmorMeta);
+            }
+            newItemMeta = ResultItem.getItemMeta();
+            // 附魔
+            for (int i = 0; i < this.enchants.size(); i++) {
+                String[] EnchantsParts = this.enchants.get(i).split(":");
+                int level = Integer.parseInt(EnchantsParts[1]);
+                Enchantment enchantment = Enchantment.getByName(EnchantsParts[0]);
+                newItemMeta.addEnchant(enchantment, level, true);
+            }
+            // 說明
+            if (this.itemLores.size() > 0) {
+                newItemMeta.setLore(this.itemLores);
+            }
+            // 寫入資料
+            ResultItem.setItemMeta(newItemMeta);
+            // 設定耐久為最高
+            ResultItem.setDurability((short) 0);
+
         }
         // 名稱
-        if (this.useOriginalName == 0)
-        {
+        if (this.useOriginalName == 0) {
             newItemMeta.setDisplayName(this.itemName);
         }
-        // 說明
-        if (this.itemLores.size() > 0)
-        {
-            newItemMeta.setLore(this.itemLores);
-        }
-        // 寫入資料
-        ResultItem.setItemMeta(newItemMeta);
         // 設定數量
         ResultItem.setAmount(this.quantity);
-        // 設定耐久為最高
-        ResultItem.setDurability((short)0);
         // 回傳
         return ResultItem;
     }
